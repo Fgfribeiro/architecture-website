@@ -53,6 +53,8 @@ body, html {
   top: 0;
   left: 0;
   transition: opacity 2s ease-in-out;
+  will-change: opacity;
+  transform: scale(1.001);
 }
 
 #img1 { opacity: 1; z-index: 1; }
@@ -118,3 +120,4 @@ setTimeout(crossfade, displayTime);
 </script>
 </body>
 </html>
+
