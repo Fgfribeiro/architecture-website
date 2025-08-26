@@ -55,7 +55,6 @@ body, html {
   opacity: 1;
   transition: opacity 2s ease-in-out; /* fade duration */
 }
-
 </style>
 </head>
 <body>
@@ -87,9 +86,9 @@ const imgElement = document.getElementById("slideshow");
 // Timing variables
 const fadeDuration = 2000;   // fade out/in duration in ms
 const whitePause = 500;      // pause on white in ms
-const displayTime = 3000;    // how long image stays fully visible
+const displayTime = 5000;    // fully visible duration
 
-setInterval(() => {
+function nextSlide() {
   // fade out
   imgElement.style.opacity = 0;
 
@@ -100,9 +99,14 @@ setInterval(() => {
 
     // fade in
     imgElement.style.opacity = 1;
-  }, fadeDuration + whitePause);
 
-}, displayTime + fadeDuration + whitePause);
+    // schedule next slide after fade-in + display
+    setTimeout(nextSlide, fadeDuration + displayTime);
+  }, fadeDuration + whitePause);
+}
+
+// start slideshow after initial display time
+setTimeout(nextSlide, displayTime);
 
 </script>
 </body>
