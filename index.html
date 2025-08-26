@@ -80,7 +80,10 @@ const images = [
 ];
 
 // Preload images
-const preloadedImages = images.map(src => { const img = new Image(); img.src = src; return img; });
+images.forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
 
 let current = 0;
 let next = 1;
@@ -88,36 +91,33 @@ let next = 1;
 const img1 = document.getElementById("img1");
 const img2 = document.getElementById("img2");
 
-// timing
-const fadeDuration = 2000;
 const displayTime = 5000;
 
 function crossfade() {
-  // set next image source
-  if (current % 2 === 0) {
-    img2.src = images[next];
-    img2.style.zIndex = 2;
-    img1.style.zIndex = 1;
-    img2.style.opacity = 1;
-    img1.style.opacity = 0;
-  } else {
-    img1.src = images[next];
-    img1.style.zIndex = 2;
-    img2.style.zIndex = 1;
-    img1.style.opacity = 1;
-    img2.style.opacity = 0;
-  }
+  // Determine which image is on top
+  let topImg = current % 2 === 0 ? img2 : img1;
+  let bottomImg = current % 2 === 0 ? img1 : img2;
 
+  // Set next image src on the top image
+  topImg.src = images[next];
+
+  // Bring top image to front and fade it in
+  topImg.style.zIndex = 2;
+  bottomImg.style.zIndex = 1;
+  topImg.style.opacity = 1;
+  bottomImg.style.opacity = 0;
+
+  // Advance indices
   current = next;
   next = (next + 1) % images.length;
 
+  // Schedule next crossfade
   setTimeout(crossfade, displayTime);
 }
 
-// start slideshow
+// Start slideshow
 setTimeout(crossfade, displayTime);
-
 </script>
+
 </body>
 </html>
-
