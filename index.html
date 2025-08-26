@@ -42,19 +42,22 @@ body, html {
   border: 30px solid white;
   box-shadow: 0 0 30px rgba(255,255,255,0.2);
   overflow: hidden;
-  background: white; /* ensures white shows during fade */
+  background: white;
 }
 
-#slideshow {
+#container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 1;
-  transition: opacity 2s ease-in-out; /* fade duration */
+  transition: opacity 2s ease-in-out;
 }
+
+#img1 { opacity: 1; z-index: 1; }
+#img2 { opacity: 0; z-index: 0; }
+
 </style>
 </head>
 <body>
@@ -63,7 +66,8 @@ body, html {
 <img id="contact" src="images/contact.png" alt="Contact Info">
 
 <div id="container">
-  <img id="slideshow" src="images/img1.jpg" class="show">
+  <img id="img1" src="images/img1.jpg">
+  <img id="img2" src="images/img2.jpg">
 </div>
 
 <script>
@@ -73,40 +77,43 @@ const images = [
   "images/img3.jpg"
 ];
 
-// Preload images to avoid flicker
-const preloadedImages = images.map(src => {
-  const img = new Image();
-  img.src = src;
-  return img;
-});
+// Preload images
+const preloadedImages = images.map(src => { const img = new Image(); img.src = src; return img; });
 
-let index = 0;
-const imgElement = document.getElementById("slideshow");
+let current = 0;
+let next = 1;
 
-// Timing variables
-const fadeDuration = 2000;   // fade out/in duration in ms
-const whitePause = 500;      // pause on white in ms
-const displayTime = 5000;    // fully visible duration
+const img1 = document.getElementById("img1");
+const img2 = document.getElementById("img2");
 
-function nextSlide() {
-  // fade out
-  imgElement.style.opacity = 0;
+// timing
+const fadeDuration = 2000;
+const displayTime = 5000;
 
-  setTimeout(() => {
-    // switch image while faded out / white background showing
-    index = (index + 1) % images.length;
-    imgElement.src = images[index];
+function crossfade() {
+  // set next image source
+  if (current % 2 === 0) {
+    img2.src = images[next];
+    img2.style.zIndex = 2;
+    img1.style.zIndex = 1;
+    img2.style.opacity = 1;
+    img1.style.opacity = 0;
+  } else {
+    img1.src = images[next];
+    img1.style.zIndex = 2;
+    img2.style.zIndex = 1;
+    img1.style.opacity = 1;
+    img2.style.opacity = 0;
+  }
 
-    // fade in
-    imgElement.style.opacity = 1;
+  current = next;
+  next = (next + 1) % images.length;
 
-    // schedule next slide after fade-in + display
-    setTimeout(nextSlide, fadeDuration + displayTime);
-  }, fadeDuration + whitePause);
+  setTimeout(crossfade, displayTime);
 }
 
-// start slideshow after initial display time
-setTimeout(nextSlide, displayTime);
+// start slideshow
+setTimeout(crossfade, displayTime);
 
 </script>
 </body>
