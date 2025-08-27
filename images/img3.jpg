@@ -1,2 +1,0 @@
-git rm images/img3.jpg
-git commit -m "Remove old img3.jpg"
